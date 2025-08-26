@@ -1,0 +1,8 @@
+streamlit
+pymupdf 
+python-dotenv
+apify-client
+google-genai
+beautifulsoup4
+google-search-results
+fastmcp==1.0
