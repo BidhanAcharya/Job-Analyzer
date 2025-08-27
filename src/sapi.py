@@ -4,6 +4,7 @@ from serpapi import GoogleSearch
 import streamlit as st
 load_dotenv()
 serp_api_key = os.getenv("SERP_API_KEY")
+import requests
 
 
 
@@ -27,31 +28,31 @@ serp_api_key = os.getenv("SERP_API_KEY")
 
 ## fectching job using serp api
 
-def fetch_jobs_from_serpapi(keywords:list[str], location: str="Australia"):
-    all_results = []
-    print("keywords:", keywords)
-    print("location:", location)
+# def fetch_jobs_from_serpapi(keywords:list[str], location: str="Australia"):
+#     all_results = []
+#     print("keywords:", keywords)
+#     print("location:", location)
     
-    for keyword in keywords:
-         params = {
-            "engine": "google_jobs",
-            "q":f" Vacany of {keyword} jobs in {location}",      
-            "hl": "en",
-            "location": location,
-            "num": 1,
-            "api_key": serp_api_key
-        }
-         search = GoogleSearch(params)
-         results = search.get_dict()
-        #  all_results.append(results)
-         filtered_result={
-               "keyword":keyword,
-               "google_jobs_url": results.get("search_metadata", {}).get("google_jobs_url"),
-               "location_used": results.get("search_parameters", {}).get("location_used")
-        }
-         all_results.append(filtered_result)
+#     for keyword in keywords:
+#          params = {
+#             "engine": "google_jobs",
+#             "q":f" Vacany of {keyword} jobs in {location}",      
+#             "hl": "en",
+#             "location": location,
+#             "num": 1,
+#             "api_key": serp_api_key
+#         }
+#          search = GoogleSearch(params)
+#          results = search.get_dict()
+#         #  all_results.append(results)
+#          filtered_result={
+#                "keyword":keyword,
+#                "google_jobs_url": results.get("search_metadata", {}).get("google_jobs_url"),
+#                "location_used": results.get("search_parameters", {}).get("location_used")
+#         }
+#          all_results.append(filtered_result)
     
-    return all_results
+#     return all_results
          
 
 
@@ -60,4 +61,54 @@ def fetch_jobs_from_serpapi(keywords:list[str], location: str="Australia"):
 # print(results)
 
 
+rapid_api_key=os.getenv("RAPID_API")
+def fetch_jobs(keywords:list[str], location:str):
+    url="https://jsearch.p.rapidapi.com/search"
+    headers = {
+        "x-rapidapi-key": rapid_api_key,
+        "x-rapidapi-host": "jsearch.p.rapidapi.com"
+    }
+    all_jobs = []
+    for keyword in keywords:
+         querystring = {
+            "query": f"{keyword} jobs in {location}",
+            "page": "1",
+            "num_pages": 1,
+            "country": location,
+            "date_posted": "all"
+        }
+         response = requests.get(url, headers=headers, params=querystring)
+         data = response.json()
+         
+         if "data" in data:
+             jobs = data["data"]
+             for job in jobs:
+                 filtered_job = {
+                     "job_title":job.get("job_title") ,
+                     "company_name": job.get("employer_name"),
+                     "location": job.get("job_location"),
+                     "employment_type": job.get("job_employment_type"),
+                     "job_link": job.get("job_apply_link"),
+                 }
+                 all_jobs.append(filtered_job)
+            
+    return all_jobs
+             
 
+# keywords = ["Software Developer"]
+# location = "Chicago"
+# jobs = fetch_jobs(keywords, location)
+# if jobs:
+#             st.subheader("🎯 Job Recommendations")
+#             for job in jobs:
+#                 with st.container():
+#                     st.markdown(f"### {job['job_title']}")
+#                     st.write(f"**Company:** {job['company_name']}")
+#                     st.write(f"**Location:** {job['location']}")
+#                     st.write(f"**Employment Type:** {job['employment_type']}")
+#                     st.markdown(f"[Apply Here]({job['job_link']})")
+#                     st.markdown("---")
+                        
+# else:
+#             st.warning("No jobs found.")
+    

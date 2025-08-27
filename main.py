@@ -1,10 +1,62 @@
-from dotenv import load_dotenv
-load_dotenv()
 import os
+import streamlit as st
 from supabase import create_client, Client
+from dotenv import load_dotenv
+from app import run_app
 
-url= os.environ.get("SUPABASE_URL")
-key = os.environ.get("SUPABASE_KEY")
-supabase= create_client(url, key)
-data=supabase.table("tasks").select("title").execute()
-print(data)
+# Load environment variables
+load_dotenv()
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(url, key)
+
+# --- Initialize session state ---
+if "user" not in st.session_state:
+    st.session_state["user"] = None
+
+st.title("🔐 Supabase Auth with Streamlit")
+
+# --- Logout ---
+if st.session_state["user"]:
+    st.success(f"Welcome, {st.session_state['user'].email}")
+    if st.button("Logout"):
+        st.session_state["user"] = None
+        st.rerun()
+
+else:
+    tab1, tab2 = st.tabs(["Login", "Signup"])
+
+    # ---------------- LOGIN ----------------
+    with tab1:
+        login_email = st.text_input("Email (login)", key="login_email")
+        login_password = st.text_input("Password", type="password", key="login_password")
+        if st.button("Login"):
+            try:
+                res = supabase.auth.sign_in_with_password(
+                    {"email": login_email, "password": login_password}
+                )
+                st.session_state["user"] = res.user
+                st.success("✅ Logged in successfully")
+                
+                st.rerun()
+               
+            except Exception as e:
+                st.error(f"Login failed: {e}")
+
+    # ---------------- SIGNUP ----------------
+    with tab2:
+        signup_email = st.text_input("Email (signup)", key="signup_email")
+        signup_password = st.text_input("Password", type="password", key="signup_password")
+        if st.button("Signup"):
+            try:
+                res = supabase.auth.sign_up(
+                    {"email": signup_email, "password": signup_password}
+                )
+                st.success("✅ Signup successful! Check your email for confirmation.")
+            except Exception as e:
+                st.error(f"Signup failed: {e}")
+
+# --- Protected Content Example ---
+if st.session_state["user"]:
+    st.write("🎉 This is protected content, only visible when logged in.")
+    run_app()
