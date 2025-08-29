@@ -19,6 +19,7 @@ st.title("🔐 Supabase Auth with Streamlit")
 # --- Logout ---
 if st.session_state["user"]:
     st.success(f"Welcome, {st.session_state['user'].email}")
+    run_app(supabase)
     if st.button("Logout"):
         st.session_state["user"] = None
         st.rerun()
@@ -35,7 +36,11 @@ else:
                 res = supabase.auth.sign_in_with_password(
                     {"email": login_email, "password": login_password}
                 )
+                user_id= res.user.id
+                print("User_ID:", user_id)
+                st.session_state["user_id"]=user_id
                 st.session_state["user"] = res.user
+                print("Logged in user:", st.session_state["user"])
                 st.success("✅ Logged in successfully")
                 
                 st.rerun()
@@ -57,6 +62,6 @@ else:
                 st.error(f"Signup failed: {e}")
 
 # --- Protected Content Example ---
-if st.session_state["user"]:
-    st.write("🎉 This is protected content, only visible when logged in.")
-    run_app()
+# if st.session_state["user"]:
+#     st.write("🎉 This is protected content, only visible when logged in.")
+#     run_app(supabase)

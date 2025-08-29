@@ -3,7 +3,7 @@ from src.gemini_helper import text_generator, job_keyword
 from src.text_extractor import extract_text_from_pdf
 from src.sapi import fetch_jobs
 
-def run_app():
+def run_app(supabase):
     st.set_page_config(page_title="Job Recommender", layout="wide")
     st.title("AI Job Recommender")
     st.markdown("Upload your resume and get job recommendations based on your skills and experience from LinkedIn and Naukri.")
@@ -58,6 +58,34 @@ def run_app():
                 if jobs:
                     st.subheader("🎯 Job Recommendations")
                     for job in jobs:
+                     try:
+                        print("**************")
+                        user_id=st.session_state["user_id"]
+                        print("User_ID in job loop:", user_id)
+                        print("job title",job['job_title'])
+                        print("type of job title",type(job['job_title']))
+                        print("company name",job['company_name'])
+                        print("type of company name",type(job['company_name']))
+                        print("location",job['location'])
+                        print("type of location",type(job['location']))
+                        print("employment type",job['employment_type'])
+                        print("type of employment type",type(job['employment_type']))
+                        print("job link",job['job_link'])
+                        print("type of job link",type(job['job_link']))
+                        print("**************")
+                        
+                        supabase.table("jobs").insert({{
+                            "user_id":user_id,
+                            "job_title":job['job_title'],
+                            "company_name":job['company_name'],
+                            "location":job['location'],
+                            "employment_type":job['employment_type'],
+                            "job_link":job['job_link']
+                        }}).execute()
+                         
+                     except Exception as e:
+                         st.error(f"Failed to save job to database: {e}")
+                                
                      with st.container():
                             st.markdown(f"### {job['job_title']}")
                             st.write(f"**Company:** {job['company_name']}")
@@ -69,4 +97,6 @@ def run_app():
                 else:
                     st.warning("No jobs found.")
 
-run_app()
+# run_app()
+if __name__=="__main__":
+    run_app()

@@ -83,21 +83,37 @@ def fetch_jobs(keywords:list[str], location:str):
          if "data" in data:
              jobs = data["data"]
              for job in jobs:
-                 filtered_job = {
+                try:
+                    print("**************")
+                    print("job title",job['job_title'])
+                    print("type of job title",type(job['job_title']))
+                    print("company name",job['employer_name'])
+                    print("type of company name",type(job['employer_name']))
+                    print("location",job['job_location'])
+                    print("type of location",type(job['job_location']))
+                    print("employment type",job['job_employment_type'])
+                    print("type of employment type",type(job['job_employment_type']))
+                    print("job link",job['job_apply_link'])
+                    print("type of job link",type(job['job_apply_link']))
+                    print("**************")
+                except Exception as e:
+                    print(f"Error printing job details: {e}")
+                filtered_job = {
                      "job_title":job.get("job_title") ,
                      "company_name": job.get("employer_name"),
                      "location": job.get("job_location"),
                      "employment_type": job.get("job_employment_type"),
                      "job_link": job.get("job_apply_link"),
                  }
-                 all_jobs.append(filtered_job)
+                all_jobs.append(filtered_job)
+    
             
     return all_jobs
              
 
-# keywords = ["Software Developer"]
-# location = "Chicago"
-# jobs = fetch_jobs(keywords, location)
+keywords = ["Software Developer"]
+location = "Chicago"
+jobs = fetch_jobs(keywords, location)
 # if jobs:
 #             st.subheader("🎯 Job Recommendations")
 #             for job in jobs:

@@ -70,10 +70,13 @@ def extract_text_from_pdf(uploaded_file):
                               "content-type": mime_type},
             )
         )
-    doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+    # doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+    doc=fitz.open(temp_path)  # open from disk
     text = ""
     for page in doc:
         text += page.get_text()
+    doc.close()
+    os.remove(temp_path)  # clean up the temp file
     return text
 
 
