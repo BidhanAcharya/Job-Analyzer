@@ -26,3 +26,31 @@ def text_generator(prompt):
 
 
 
+def analyze_resume(job_description: str, resume_text: str):
+    prompt = f"""
+    Analyze the following resume against the provided job description. Evaluate the resume's strengths and weaknesses in the context of the role's requirements.
+    Provide the analysis in JSON format with these fields:
+    - matchScore (integer 0-100)
+    - summary (string)
+    - strengths (array of strings)
+    - improvements (array of strings)
+
+    Job Description:
+    ---
+    {job_description}
+    ---
+
+    Resume Text:
+    ---
+    {resume_text}
+    ---
+    """
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
+    return response.text
+
+
+
