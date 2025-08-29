@@ -51,7 +51,6 @@ def run_app(supabase):
                 # jobs = fetch_jobs_from_serpapi(keywords, location)
                 jobs=fetch_jobs(keywords, location)
                 print("Fetched jobs:", jobs)
-                print("Number of jobs fetched:", len(jobs))
                 
                 
             
@@ -59,7 +58,6 @@ def run_app(supabase):
                     st.subheader("🎯 Job Recommendations")
                     for job in jobs:
                      try:
-                        print("**************")
                         user_id=st.session_state["user_id"]
                         print("User_ID in job loop:", user_id)
                         print("job title",job['job_title'])
@@ -73,15 +71,15 @@ def run_app(supabase):
                         print("job link",job['job_link'])
                         print("type of job link",type(job['job_link']))
                         print("**************")
-                        
-                        supabase.table("jobs").insert({{
+                        # Save job to Supabase
+                        supabase.table("jobs").insert({
                             "user_id":user_id,
                             "job_title":job['job_title'],
                             "company_name":job['company_name'],
                             "location":job['location'],
                             "employment_type":job['employment_type'],
                             "job_link":job['job_link']
-                        }}).execute()
+                        }).execute()
                          
                      except Exception as e:
                          st.error(f"Failed to save job to database: {e}")

@@ -37,10 +37,10 @@ else:
                     {"email": login_email, "password": login_password}
                 )
                 user_id= res.user.id
-                print("User_ID:", user_id)
+                # print("User_ID:", user_id)
                 st.session_state["user_id"]=user_id
                 st.session_state["user"] = res.user
-                print("Logged in user:", st.session_state["user"])
+                # print("Logged in user:", st.session_state["user"])
                 st.success("✅ Logged in successfully")
                 
                 st.rerun()
