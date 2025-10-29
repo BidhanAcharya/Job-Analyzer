@@ -115,7 +115,7 @@ def fetch_jobs(keywords:list[str], location:str):
 # location = "Chicago"
 # jobs = fetch_jobs(keywords, location)
 # if jobs:
-#             st.subheader("🎯 Job Recommendations")
+#             st.subheader( "Job Recommendations")
 #             for job in jobs:
 #                 with st.container():
 #                     st.markdown(f"### {job['job_title']}")
