@@ -20,9 +20,9 @@ def run_app(supabase):
             
             # Display nicely formatted results
             st.markdown("---")
-            st.header("📑 Resume Summary")
+            st.header(" Resume Summary")
             st.markdown(f"<div style='background-color: #000000; padding: 15px; border-radius: 10px; font-size:16px; color:white;'>{summary}</div>", unsafe_allow_html=True)
-            st.success("✅ Analysis Completed Successfully!")
+            st.success(" Analysis Completed Successfully!")
             
             ## Give an option to input location preference
             location = st.text_input("Enter a location e.g., Australia, USA, Germany")
@@ -30,7 +30,7 @@ def run_app(supabase):
 
 
 
-            if st.button("🔎Get Job Recommendations"):
+            if st.button("Get Job Recommendations"):
 
                 with st.spinner("Fetching job recommendations..."):
                     import ast
@@ -57,7 +57,7 @@ def run_app(supabase):
                     
                 
                     if jobs:
-                        st.subheader("🎯 Job Recommendations")
+                        st.subheader(" Job Recommendations")
                         for job in jobs:
                          try:
                             user_id=st.session_state["user_id"]
@@ -97,7 +97,7 @@ def run_app(supabase):
                     else:
                         st.warning("No jobs found.")
     with tabs[1]:
-         st.header("📊 Your Saved Jobs")
+         st.header(" Your Saved Jobs")
          user_id = st.session_state.get("user_id")
          if not user_id:
             st.warning("Please login first to view your dashboard.")
@@ -117,10 +117,10 @@ def run_app(supabase):
                             st.markdown("---")
                             
                             if job["applied"]:
-                                st.success("✅ Applied")
+                                st.success(" Applied")
                                 
                                 if job["reached_back"]:
-                                    st.info("🔵 Reached Back")
+                                    st.info(" Reached Back")
                                 else:
                                     if st.button("Mark Employer Reached Back 📞", key=f"reached_{job['id']}"):
                                         try:
@@ -132,7 +132,7 @@ def run_app(supabase):
                                 
                                 
                             else:
-                                if st.button(f"Mark as Applied ✅", key=f"apply_{job['id']}"):
+                                if st.button(f"Mark as Applied ", key=f"apply_{job['id']}"):
                                     try:
                                         supabase.table("jobs").update({"applied": True}).eq("id", job["id"]).execute()
                                         st.success("Job marked as applied!")
