@@ -14,7 +14,7 @@ supabase: Client = create_client(url, key)
 if "user" not in st.session_state:
     st.session_state["user"] = None
 
-st.title("🔐 Supabase Auth with Streamlit")
+st.title("Supabase Auth with Streamlit")
 
 # --- Logout ---
 if st.session_state["user"]:
@@ -41,7 +41,7 @@ else:
                 st.session_state["user_id"]=user_id
                 st.session_state["user"] = res.user
                 # print("Logged in user:", st.session_state["user"])
-                st.success("✅ Logged in successfully")
+                st.success("Logged in successfully")
                 
                 st.rerun()
                
@@ -57,7 +57,7 @@ else:
                 res = supabase.auth.sign_up(
                     {"email": signup_email, "password": signup_password}
                 )
-                st.success("✅ Signup successful! Check your email for confirmation.")
+                st.success(" Signup successful! Check your email for confirmation.")
             except Exception as e:
                 st.error(f"Signup failed: {e}")
 
