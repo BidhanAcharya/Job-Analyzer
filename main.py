@@ -63,5 +63,5 @@ else:
 
 # --- Protected Content Example ---
 # if st.session_state["user"]:
-#     st.write("🎉 This is protected content, only visible when logged in.")
+#     st.write(" This is protected content, only visible when logged in.")
 #     run_app(supabase)
